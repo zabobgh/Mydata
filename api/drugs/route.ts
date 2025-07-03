@@ -1,3 +1,4 @@
+
 import { kv } from '@vercel/kv';
 import { Drug } from '../../src/types';
 import { mockDrugs, generateIdForNewItem } from '../../src/services/mockData';
@@ -5,7 +6,7 @@ import { mockDrugs, generateIdForNewItem } from '../../src/services/mockData';
 export const runtime = 'edge';
 
 // GET /api/drugs - Fetches all drugs
-export async function GET(request: Request) {
+export async function GET(_request: Request) {
   try {
     let drugs: Drug[] | null = await kv.get('drugs');
 
