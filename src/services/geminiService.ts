@@ -1,13 +1,17 @@
 
+
 import { GoogleGenAI } from "@google/genai";
 import { Drug, Transaction } from '../types';
 
-// IMPORTANT: This assumes the API_KEY is set in the execution environment as per the coding guidelines.
-const ai = new GoogleGenAI({apiKey: process.env.API_KEY});
+const apiKey = process.env.API_KEY;
+// Initialize AI client only if a valid API key is available to prevent crashes.
+const ai = (apiKey && apiKey !== 'undefined') ? new GoogleGenAI({ apiKey }) : null;
+
+const apiKeyError = "API Key is not configured. Please set the VITE_GEMINI_API_KEY environment variable in your Vercel project settings.";
 
 export const generateStockAnalysis = async (drugs: Drug[]): Promise<string> => {
-    if (!process.env.API_KEY) {
-        return "API Key is not configured. Please set the API_KEY environment variable.";
+    if (!ai) {
+        return apiKeyError;
     }
 
     const prompt = `
@@ -30,7 +34,7 @@ export const generateStockAnalysis = async (drugs: Drug[]): Promise<string> => {
             model: 'gemini-2.5-flash-preview-04-17',
             contents: prompt,
         });
-        return response.text ?? "AI response was empty.";
+        return response.text;
     } catch (error) {
         console.error("Error generating stock analysis with Gemini:", error);
         return "เกิดข้อผิดพลาดในการเรียกใช้ AI เพื่อวิเคราะห์ข้อมูล โปรดตรวจสอบ Console และการตั้งค่า API Key";
@@ -43,8 +47,8 @@ export const getAIChatResponse = async (
     drugs: Drug[],
     transactions: Transaction[]
 ): Promise<string> => {
-     if (!process.env.API_KEY) {
-        return "API Key is not configured. Please set the API_KEY environment variable.";
+     if (!ai) {
+        return apiKeyError;
     }
 
     const systemInstruction = `
@@ -77,7 +81,7 @@ export const getAIChatResponse = async (
             }
         });
 
-        return response.text ?? "AI response was empty.";
+        return response.text;
     } catch (error) {
         console.error("Error getting AI chat response with Gemini:", error);
         return "ขออภัยค่ะ เกิดข้อผิดพลาดในการเชื่อมต่อกับ AI โปรดตรวจสอบ Console และการตั้งค่า API Key";

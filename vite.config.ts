@@ -10,9 +10,9 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     // This makes the VITE_GEMINI_API_KEY from your .env file available as process.env.API_KEY in your client-side code.
-    // This is required to align with the Gemini SDK coding guidelines while using Vite's standard environment variable system.
+    // Providing an empty string fallback makes the app more resilient if the env var is not set.
     define: {
-      'process.env.API_KEY': JSON.stringify(env.VITE_GEMINI_API_KEY)
+      'process.env.API_KEY': JSON.stringify(env.VITE_GEMINI_API_KEY || '')
     },
     build: {
       // This is to prevent a build error related to a large vendor chunk.
