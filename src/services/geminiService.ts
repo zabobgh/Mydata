@@ -30,7 +30,7 @@ export const generateStockAnalysis = async (drugs: Drug[]): Promise<string> => {
             model: 'gemini-2.5-flash-preview-04-17',
             contents: prompt,
         });
-        return response.text;
+        return response.text ?? "AI response was empty.";
     } catch (error) {
         console.error("Error generating stock analysis with Gemini:", error);
         return "เกิดข้อผิดพลาดในการเรียกใช้ AI เพื่อวิเคราะห์ข้อมูล โปรดตรวจสอบ Console และการตั้งค่า API Key";
@@ -77,7 +77,7 @@ export const getAIChatResponse = async (
             }
         });
 
-        return response.text;
+        return response.text ?? "AI response was empty.";
     } catch (error) {
         console.error("Error getting AI chat response with Gemini:", error);
         return "ขออภัยค่ะ เกิดข้อผิดพลาดในการเชื่อมต่อกับ AI โปรดตรวจสอบ Console และการตั้งค่า API Key";
